@@ -37,7 +37,7 @@ while True:
 cap.release()
 cv.destroyAllWindows()"""
 
-import flux_video
+import gui
 
-test = flux_video.Flux()
-test.racine.mainloop()
+fenetre = gui.gui()
+fenetre.racine.mainloop()
