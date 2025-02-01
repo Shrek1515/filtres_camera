@@ -10,15 +10,13 @@ class Flux:
 
     def __init__(self):
 
-
+        self.cap = cv.VideoCapture(0)
         self.ret = None
         self.frame = None
 
         #self.path = "/home/shrek/Documents/Perso/PythonProjetsPerso/projetrecovisage/.venv/lib/python3.11/site-packages/cv2/data/"
         #self.face_cascade = cv.CascadeClassifier(self.path + 'haarcascade_frontalface_default.xml')
         #self.eye_cascade = cv.CascadeClassifier(self.path + 'haarcascade_eye.xml')
-
-
 
     @staticmethod
     @jit(nopython=True)
@@ -55,15 +53,10 @@ class Flux:
 
         return text
 
-    @staticmethod
-    def lancer_flux(cadre, label, racine):
-
-        cap = cv.VideoCapture(0)
+    def lancer_flux(self, label):
 
         while True:
-
-            ret, frame = cap.read()
-
+            ret, frame = self.cap.read()
             if not ret:
                 print("Erreur lors de la lecture du flux vidéo.")
                 break
@@ -73,7 +66,6 @@ class Flux:
             #    cv.rectangle(self.frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             img = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-
             img = Image.fromarray(img)
 
             coef = 5
@@ -84,17 +76,11 @@ class Flux:
             img = (grayscale_array / 255.0 * 127).astype(np.uint8)
 
             text = Flux.vers_ascii(img)
-            print(text)
-            if label is None:
-                label = tk.Label(cadre, text=text, font=("Courier", 12), justify='left')
-                label.pack()
-
-            else:
-                label.configure(text=text)
+            #print(text)
+            label.after(0, label.configure, {"text": text})
 
             if cv.waitKey(1) == ord('q'):
                 break
 
-        #racine.quit()
-        cap.release()
-        cv.destroyAllWindows()
+    def arreter_flux(self):
+        self.cap.release()
